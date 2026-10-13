@@ -2,6 +2,8 @@
 
 Read only the **Say** lines: about 150 words, six beats of roughly ten seconds. Fallbacks replace the live action; do not read them in addition.
 
+The app also supports a separate manual buddy-file exchange, outside this 60-second example-feedback demo.
+
 **Before starting:** open the production app online, reset with confirmation, and save the example contact-form commitment. Have these two short entries ready to paste: evidence, “Created three labeled form inputs”; reflection, “Labels connect using for and id.” Rehearse the clicks with a stopwatch. No screenshots or recording are assumed available.
 
 ## 1 · 0–10 seconds — The person and their problem
@@ -46,8 +48,8 @@ Read only the **Say** lines: about 150 words, six beats of roughly ten seconds. 
 
 ## 6 · 50–60 seconds — What is next
 
-**Say:** “Next, I’ll test this with real learners: does it help them return? Real buddy feedback comes later. Today, it’s one working journey on one browser.”
+**Say:** “Next, I’ll test this with real learners: does it help them return? Easier buddy sharing comes later. Today, it’s one working journey on one browser.”
 
 **Show:** finish on the next action and browser-local privacy note.
 
-**Fallback:** “Learner testing and real buddy feedback are next steps, not features I’m claiming today.”
+**Fallback:** “Learner testing and easier sharing are next steps; real feedback currently requires exchanging files manually.”

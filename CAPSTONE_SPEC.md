@@ -5,7 +5,7 @@
 ## Problem and users
 Independent learners may lose momentum when study time has no practical outcome or follow-up commitment. This is a hypothesis, not validated market evidence.
 
-Primary user: **Ada, an illustrative aspiring developer in Lagos**, learning HTML/CSS independently. Assumed example: she watches a forms lesson, misses a session, and returns without a finished form or clear restart point. The prototype serves one learner on one browser. A buddy is a future second user; this build uses labeled example feedback, not an actual peer workflow.
+Primary user: **Ada, an illustrative aspiring developer in Lagos**, learning HTML/CSS independently. Assumed example: she watches a forms lesson, misses a session, and returns without a finished form or clear restart point. The prototype serves one learner on one browser. A buddy is a future second user; the original slice uses labeled example feedback. The implemented extension below adds manual real-peer file exchange.
 
 Outcome to test: can a learner turn a study commitment into recorded work and a clear next step? Recruit one real learner to validate the scenario and usability; do not infer habit change from a single test.
 
@@ -48,7 +48,7 @@ No external AI API is required in this specification. Whether the hackathon requ
 - [ ] **8 · Day 7 — package and rehearse.** Prepare README, a three-minute demo script, hosting if available, and an offline fallback. **Check:** rehearse from reset through refresh; review repository for secrets and confirm every simulated feature is labeled.
 
 ## Out of scope
-Authentication, cloud persistence, actual buddy messaging or matching, live presence, calls, course imports, public profiles, leaderboards, payments, AI tutoring, automated evidence grading, push/email reminders, analytics infrastructure, and additional learning pathways. Local persistence is not a production multi-user service.
+Authentication, cloud persistence, live buddy messaging or matching, live presence, calls, course imports, public profiles, leaderboards, payments, AI tutoring, automated evidence grading, push/email reminders, analytics infrastructure, and additional learning pathways. Local persistence is not a production multi-user service.
 
 ## Risks and responses
 - **Accountability value is unproven:** use the prototype to test comprehension and next-step usefulness; real peer accountability and longitudinal habit outcomes require later testing.
@@ -57,3 +57,12 @@ Authentication, cloud persistence, actual buddy messaging or matching, live pres
 - **Data loss or connectivity failure:** disclose same-browser storage, handle failed saves, cache the app shell, and rehearse offline. Clearing browser data loses progress; export/backup is outside this slice.
 - **Timer and demo fragility:** use persisted timestamps and test background/reload behavior; keep the demo shortcut explicit and a reproducible fixture ready.
 - **Privacy and link safety:** collect minimal text, avoid private work URLs, accept only HTTP(S) links, and render user input as text. No scraping or automatic link fetching.
+
+
+## Implemented extension — milestone roadmap and manual buddy exchange
+
+The learner can queue milestones with completion conditions, see planned/in-progress/completed status, and carry the next planned milestone into a new session. Completed focus sessions are recorded separately, labeled when demo-accelerated, and retain achievements/reflections. Older saved records are preserved; missing historical sessions cannot be reconstructed.
+
+Real peer feedback is supported through manual JSON files, separately from the simulated example. A learner downloads a completed milestone check-in; a buddy imports it in another browser, writes feedback, and shares a downloaded response. The learner imports that response and can reply through another file. No shared server, identity verification, automatic delivery, or live messaging is provided. Files contain learner-selected work and reflections; share them deliberately.
+
+Additional checks: queue a milestone, finish a session, close/reopen the page and verify history; complete the current milestone and promote the planned one; use two isolated browsers to exchange a check-in, feedback, and reply; reject malformed/unrelated responses and ignore duplicate messages. Persist changes before showing success.

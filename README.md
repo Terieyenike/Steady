@@ -2,7 +2,7 @@
 
 Steady is a learning accountability prototype for independent learners, initially aspiring software developers.
 It turns a small commitment into a focus session, recorded work, and a clear next milestone.
-Ada, the example learner, is illustrative; buddy feedback is explicitly simulated.
+Ada is illustrative; example feedback is simulated, while real buddy feedback can be exchanged manually through files.
 
 ## Screenshot
 
@@ -10,10 +10,12 @@ Ada, the example learner, is illustrative; buddy feedback is explicitly simulate
 
 ## Features that work today
 
-- Save a learning goal, practical milestone, and completion condition.
+- Save a learning goal, practical milestone, and completion condition; queue more milestones in a visible roadmap with planned, in-progress, and completed states.
 - Start, pause, and resume a 25-minute timer; restore it after refresh. **Finish session for demo** is a visible shortcut, not proof of study time.
 - Record text evidence or an HTTP(S) work URL, plus a reflection. Finishing the timer alone does not complete the milestone.
-- Open labeled example buddy feedback, then accept or edit the next milestone.
+- Open labeled example buddy feedback, then accept or edit the next milestone. Planned milestones become the suggested next step.
+- Exchange real written feedback without accounts: download a check-in, share it manually, and import a buddy’s response. Send replies the same way.
+- Keep a completed focus-session history with recorded achievements and reflections. Sessions finished using the demo shortcut are labeled.
 - Review completed work and retain saved progress on the same browser. Failed writes show an error; reset requires confirmation.
 - Use the production app offline after its first online load and service-worker activation. The browser suite covers the complete keyboard journey at 360px width.
 
@@ -66,13 +68,17 @@ Open the printed Local URL, normally [http://127.0.0.1:4173](http://127.0.0.1:41
 
 See [DEMO_SCRIPT.md](DEMO_SCRIPT.md) for the rehearsal and fallback sequence.
 
+### Exchange feedback with a real buddy
+
+In **Bring a buddy into the loop**, choose **Share my work** and download a completed milestone’s check-in (`steady-checkin.json`). Share the JSON file yourself. Your buddy opens the same app in their browser, chooses **Review a buddy’s work**, and opens that file. They write feedback and share the downloaded `steady-feedback.json` response back. Choose **Read feedback or a reply** on your original browser and open that response to keep it beside your saved work. Write and download a reply to continue the exchange. Both browsers keep their own copies; no shared server is involved.
+
 ## How it works
 
 - **Interface:** React and TypeScript render a single-page guided journey; Vite builds static assets. There is no backend.
 - **Journey state:** `src/state.ts` defines goals, milestones, sessions, evidence, and transitions. Changes are written before the interface reports success.
 - **Persistence and timer:** versioned localStorage uses `steady.journey.v1`; timestamps restore remaining focus time after backgrounding or reload. Unsaved form drafts are not persisted.
 - **Offline:** `vite-plugin-pwa` generates a Workbox service worker that precaches the production app shell. Local storage holds saved progress separately.
-- **Example data:** `src/demo.ts` supplies the illustrative contact-form journey and fixed feedback. Work URLs are displayed as links, never automatically fetched or assessed.
+- **Buddy exchange:** check-in and feedback JSON files are downloaded and imported manually. Incoming messages must match a known submission; imports are validated and duplicate messages ignored. Display names are not verified. `src/demo.ts` supplies the separate simulated example; submitted work links are never fetched or assessed.
 - **MCP servers, skills, and scheduled tasks:** none are integrated into the application. The external Sites skill guided local development, and review-agent guided this documentation check; neither is a runtime dependency. IntelliTrex reuse and scheduled routines remain deferred.
 
 ## Built with Codex
@@ -85,9 +91,11 @@ See [DEMO_SCRIPT.md](DEMO_SCRIPT.md) for the rehearsal and fallback sequence.
 
 ## Limitations and next steps
 
-- This is a prototype, not a multi-user service. No authentication, cloud backup, cross-device sync, live rooms, real peer messaging, matching, reminders, or AI feedback is implemented.
+- This is a prototype, not a hosted multi-user service. No authentication, cloud backup, cross-device sync, live rooms, live messaging, matching, reminders, or AI feedback is implemented. Buddy exchange requires manually sharing files; the app does not deliver them.
+- Older saved records remain readable. A roadmap and session history start empty for older records because those details were not previously recorded.
 - Clearing or evicting browser storage loses progress. Unsaved evidence, reflection, and next-step edits are lost on reload. Avoid sensitive information and private work links.
-- Fixed feedback does not review submitted work, verify competence, or demonstrate improved learning outcomes. Test the accountability hypothesis with real learners next.
+- Share check-in files only with people you trust: they contain your chosen work link, evidence, and reflection. Imported names and authorship cannot be verified.
+- Fixed example feedback does not review submitted work, verify competence, or demonstrate improved learning outcomes. Test the accountability hypothesis with real learners next.
 - Verify the official Moonshot rubric, including any live-AI requirement; evaluate IntelliTrex reuse only where it serves the working journey.
 - Add the submission screenshot, conduct a real learner usability session, and validate a hosted HTTPS build on the intended Nigerian network before showcasing.
-- The git history currently contains the planning documents only; application files and this README need to be included in the submission repository.
+- Include application source, tests, and these documents in the public submission repository; local uncommitted files are not part of a GitHub submission.
