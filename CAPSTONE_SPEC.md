@@ -66,3 +66,12 @@ The learner can queue milestones with completion conditions, see planned/in-prog
 Real peer feedback is supported through manual JSON files, separately from the simulated example. A learner downloads a completed milestone check-in; a buddy imports it in another browser, writes feedback, and shares a downloaded response. The learner imports that response and can reply through another file. No shared server, identity verification, automatic delivery, or live messaging is provided. Files contain learner-selected work and reflections; share them deliberately.
 
 Additional checks: queue a milestone, finish a session, close/reopen the page and verify history; complete the current milestone and promote the planned one; use two isolated browsers to exchange a check-in, feedback, and reply; reject malformed/unrelated responses and ignore duplicate messages. Persist changes before showing success.
+
+
+## Quality and inclusion additions — 14 October 2026
+
+- Example reference links: MDN Web Docs, “Your first form,” and W3C WAI, “Labeling controls.” Links and contact-form guidance checked on 14 October 2026. Bundled summaries remain available offline; external source pages are not cached. These references apply to the example, not arbitrary learner goals or assessments.
+- Personal pace: choose 10, 15, 25 (default), or 45 minutes before a session. The preference persists and is used for subsequent milestones. Changing duration while running or paused is not supported.
+- Shared-device guidance: explains unencrypted browser storage and offers confirmed clearing of goals, milestones, sessions, imported check-ins, and messages. Downloaded files are not deleted by an app reset.
+- Accessibility checks: named controls, a timer that avoids repeated live announcements, keyboard navigation, and 360px layout are checked in browser tests. This is not a human screen-reader audit or complete WCAG evaluation.
+- Remaining gaps: multilingual/RTL support, real learner validation, region-specific resources, testing on basic devices and slow mobile networks, and broader accessibility assessment. Do not claim these are implemented.

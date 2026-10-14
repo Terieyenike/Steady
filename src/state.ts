@@ -1,5 +1,6 @@
 export const KEY = "steady.journey.v1";
 export const DURATION = 25 * 60 * 1000;
+export const FOCUS_MINUTES = [10, 15, 25, 45] as const;
 export type Milestone = { id: number; title: string; condition: string };
 export type Session = {
   status: "idle" | "running" | "paused" | "finished";
@@ -24,6 +25,7 @@ export type SessionRecord = {
 export type Journey = {
   version: 1;
   goal: string;
+  focusMinutes: number;
   active: Milestone | null;
   session: Session;
   completed: Completion[];
@@ -37,6 +39,7 @@ export type Journey = {
 export const fresh = (): Journey => ({
   version: 1,
   goal: "",
+  focusMinutes: 25,
   active: null,
   session: { status: "idle", remaining: DURATION, startedAt: null },
   completed: [],
@@ -126,6 +129,7 @@ export function load(storage: Pick<Storage, "getItem">): Journey {
   const j = JSON.parse(raw);
   // Older v1 records had no roadmap or history. Preserve their original fields.
   if (j && typeof j === "object") {
+    j.focusMinutes ??= 25;
     j.inbox ??= [];
     j.messages ??= [];
     j.planned ??= [];
@@ -134,6 +138,7 @@ export function load(storage: Pick<Storage, "getItem">): Journey {
   if (
     j.version !== 1 ||
     typeof j.goal !== "string" ||
+    !FOCUS_MINUTES.some((m) => m === j.focusMinutes) ||
     !(j.active === null || isMilestone(j.active)) ||
     !Array.isArray(j.completed) ||
     !j.completed.every(
@@ -167,7 +172,7 @@ export function load(storage: Pick<Storage, "getItem">): Journey {
     !["idle", "running", "paused", "finished"].includes(j.session.status) ||
     !Number.isFinite(j.session.remaining) ||
     j.session.remaining < 0 ||
-    j.session.remaining > DURATION ||
+    j.session.remaining > 45 * 60 * 1000 ||
     !(j.session.startedAt === null || Number.isFinite(j.session.startedAt)) ||
     (j.session.status === "running" && j.session.startedAt === null) ||
     (j.awaitingNext && !j.completed.length)
@@ -250,7 +255,7 @@ export function advance(j: Journey, title: string): Journey {
         queued?.condition ?? "Record the change you made and what you learned.",
     },
     planned: j.planned.slice(queued ? 1 : 0),
-    session: fresh().session,
+    session: { ...fresh().session, remaining: j.focusMinutes * 60 * 1000 },
     awaitingNext: false,
     feedbackOpen: false,
   };
@@ -318,4 +323,14 @@ export function receive(j: Journey, input: unknown): Journey {
       : { ...j, messages: [...j.messages, input] };
   }
   throw new Error("Choose a valid Steady check-in or feedback file.");
+}
+
+export function setFocusDuration(j: Journey, minutes: number): Journey {
+  if (j.session.status !== "idle" || !FOCUS_MINUTES.some((m) => m === minutes))
+    throw new Error("Choose a focus duration before starting your session.");
+  return {
+    ...j,
+    focusMinutes: minutes,
+    session: { ...j.session, remaining: minutes * 60 * 1000 },
+  };
 }

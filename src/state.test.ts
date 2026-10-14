@@ -12,6 +12,7 @@ import {
   advance,
   type Journey,
   receive,
+  setFocusDuration,
 } from "./state";
 const ready = () => ({
   ...fresh(),
@@ -131,5 +132,23 @@ describe("buddy exchange", () => {
       receive(fresh(), { ...checkin, url: "javascript:alert(1)" }),
     ).toThrow();
     expect(() => receive(fresh(), { ...message, message: "" })).toThrow();
+  });
+});
+
+describe("personal focus pace", () => {
+  it("saves a chosen duration and uses it for the next milestone", () => {
+    let j: Journey = setFocusDuration(
+      { ...ready(), session: fresh().session },
+      45,
+    );
+    expect(j.session.remaining).toBe(45 * 60000);
+    j = { ...j, session: timer(j.session, "start", 1000) };
+    expect(() => setFocusDuration(j, 10)).toThrow();
+    j = finishSession(j, true, 2000);
+    j = complete(j, "work", "", "learned");
+    j = advance(j, "Next step");
+    expect(j.session.remaining).toBe(45 * 60000);
+    expect(load({ getItem: () => JSON.stringify(j) }).focusMinutes).toBe(45);
+    expect(() => setFocusDuration(j, 0)).toThrow();
   });
 });

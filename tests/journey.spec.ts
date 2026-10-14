@@ -275,9 +275,11 @@ test("two browsers exchange real written feedback and a learner reply", async ({
   await page
     .getByLabel("Choose feedback or reply (.json)")
     .setInputFiles(responsePath!);
-  await expect(page.getByRole("region", { name: "Real buddy exchange" }).getByRole("status")).toContainText(
-    "Response opened and saved",
-  );
+  await expect(
+    page
+      .getByRole("region", { name: "Real buddy exchange" })
+      .getByRole("status"),
+  ).toContainText("Response opened and saved");
   await page.reload();
   await expect(
     page.getByRole("region", { name: "Real buddy exchange" }),
@@ -304,9 +306,11 @@ test("two browsers exchange real written feedback and a learner reply", async ({
   await buddy
     .getByLabel("Choose feedback or reply (.json)")
     .setInputFiles((await (await reply).path())!);
-  await expect(buddy.getByRole("region", { name: "Real buddy exchange" }).getByRole("status")).toContainText(
-    "Response opened and saved",
-  );
+  await expect(
+    buddy
+      .getByRole("region", { name: "Real buddy exchange" })
+      .getByRole("status"),
+  ).toContainText("Response opened and saved");
   await buddy.reload();
   await expect(
     buddy.getByRole("region", { name: "Real buddy exchange" }),
@@ -320,5 +324,62 @@ test("two browsers exchange real written feedback and a learner reply", async ({
     buffer: Buffer.from("broken"),
   });
   await expect(buddy.getByRole("alert")).toContainText("not a Steady file");
+  await buddy.getByLabel("Your display name").fill("Unsaved private name");
+  await buddy
+    .getByLabel("Your feedback or reply")
+    .fill("Unsaved private draft");
+  await buddy.getByRole("button", { name: "Reset demo" }).click();
+  await buddy.getByRole("button", { name: "Yes, reset progress" }).click();
+  await buddy
+    .getByRole("button", { name: "Review a buddy’s work", exact: false })
+    .click();
+  await buddy
+    .getByLabel("Choose buddy check-in (.json)")
+    .setInputFiles(checkinFile!);
+  await expect(buddy.getByLabel("Your display name")).toHaveValue("");
+  await expect(buddy.getByLabel("Your feedback or reply")).toHaveValue("");
+  await expect(buddy.locator(".buddy-messages article")).toHaveCount(0);
   await buddyContext.close();
+});
+
+test("personal pace, accessible timer and credible reference names", async ({
+  page,
+}) => {
+  await commit(page);
+  await page
+    .getByRole("combobox", { name: "Focus duration" })
+    .selectOption("45");
+  await page.reload();
+  await expect(
+    page.getByRole("combobox", { name: "Focus duration" }),
+  ).toHaveValue("45");
+  await expect(page.getByRole("timer", { name: "Time remaining" })).toHaveText(
+    "45:00",
+  );
+  await expect(page.getByRole("timer")).toHaveAttribute("aria-live", "off");
+  await expect(
+    page.getByRole("link", { name: "Your first form" }),
+  ).toHaveAttribute("href", /^https:\/\/developer.mozilla.org/);
+  await expect(
+    page.getByRole("link", { name: "Labeling controls" }),
+  ).toHaveAttribute("href", /^https:\/\/www.w3.org/);
+  await page.getByRole("button", { name: "Start focus session" }).click();
+  await expect(
+    page.getByRole("combobox", { name: "Focus duration" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Pause session" }),
+  ).toHaveAccessibleName("Pause session");
+  await page.getByText("Using a shared device?", { exact: true }).click();
+  await expect(page.locator(".shared-device")).toContainText("not encrypted");
+  await page
+    .getByRole("button", { name: "Clear saved progress", exact: true })
+    .click();
+  await expect(
+    page.getByRole("group", { name: "Confirm reset" }),
+  ).toContainText("Downloaded files will remain");
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause session" }),
+  ).toBeVisible();
 });

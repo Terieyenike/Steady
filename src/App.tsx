@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import BuddyExchange from "./BuddyExchange";
-import { demo } from "./demo";
+import { demo, learningReferences, referenceCheckedOn } from "./demo";
 import {
   complete,
+  FOCUS_MINUTES,
+  setFocusDuration,
   planMilestone,
   finishSession,
   advance,
@@ -28,7 +30,8 @@ export default function App() {
     [error, setError] = useState(initial.error),
     [blocked, setBlocked] = useState(!!initial.error),
     [now, setNow] = useState(Date.now()),
-    [reset, setReset] = useState(false);
+    [reset, setReset] = useState(false),
+    [resetCount, setResetCount] = useState(0);
   const [goal, setGoal] = useState(demo.goal),
     [title, setTitle] = useState(demo.milestone),
     [condition, setCondition] = useState(demo.condition),
@@ -192,7 +195,12 @@ export default function App() {
                     <p className="muted">Done means: {j.active?.condition}</p>
                     <div className="timer-panel">
                       <span className="eyebrow">YOUR FOCUS SESSION</span>
-                      <div className="clock" aria-label="Time remaining">
+                      <div
+                        className="clock"
+                        role="timer"
+                        aria-live="off"
+                        aria-label="Time remaining"
+                      >
                         {String(Math.floor(left / 60000)).padStart(2, "0")}
                         <span>:</span>
                         {String(Math.floor((left % 60000) / 1000)).padStart(
@@ -207,7 +215,7 @@ export default function App() {
                             ? "One thing at a time. You’ve got this."
                             : j.session.status === "paused"
                               ? "Take a breath. Resume when you’re ready."
-                              : "25 minutes for one small step."}
+                              : `${j.focusMinutes} minutes for one small step.`}
                       </p>
                       {j.session.status !== "finished" && (
                         <div className="timer-actions">
@@ -240,6 +248,34 @@ export default function App() {
                             </button>
                           )}
                         </div>
+                      )}
+                      {j.session.status === "idle" && (
+                        <label className="duration-setting">
+                          Focus duration
+                          <select
+                            aria-label="Focus duration"
+                            value={j.focusMinutes}
+                            onChange={(e) => {
+                              try {
+                                commit(
+                                  setFocusDuration(j, Number(e.target.value)),
+                                );
+                              } catch (err) {
+                                setError((err as Error).message);
+                              }
+                            }}
+                          >
+                            {FOCUS_MINUTES.map((m) => (
+                              <option value={m} key={m}>
+                                {m} minutes
+                              </option>
+                            ))}
+                          </select>
+                          <span className="hint">
+                            Choose a length that fits your energy and available
+                            time. Set it before starting.
+                          </span>
+                        </label>
                       )}
                     </div>
                     {j.session.status === "finished" && (
@@ -513,6 +549,23 @@ export default function App() {
               Stored on this browser. No account or cloud sync. Buddy files are
               shared manually. Clearing browser data removes your progress.
             </p>
+            <details className="shared-device">
+              <summary>Using a shared device?</summary>
+              <p>
+                Your saved work and buddy messages can be read by anyone using
+                this browser profile. Storage is not encrypted or protected by a
+                password.
+              </p>
+              <p>
+                Before leaving, clear saved progress below. This removes your
+                goal, milestones, sessions, imported check-ins, and conversation
+                from this browser. Downloaded or shared files remain; remove
+                those yourself if needed.
+              </p>
+              <button className="secondary" onClick={() => setReset(true)}>
+                Clear saved progress
+              </button>
+            </details>
             <button
               className="text-button reset"
               onClick={() => setReset(true)}
@@ -525,13 +578,23 @@ export default function App() {
                 role="group"
                 aria-label="Confirm reset"
               >
-                <p>Delete saved progress on this browser?</p>
+                <p>
+                  Delete your goal, milestones, sessions, imported check-ins,
+                  and messages from this browser? Downloaded files will remain.
+                </p>
                 <button
                   className="secondary"
                   onClick={() => {
                     if (commit(fresh())) {
                       setBlocked(false);
                       setReset(false);
+                      setResetCount((count) => count + 1);
+                      setGoal(demo.goal);
+                      setTitle(demo.milestone);
+                      setCondition(demo.condition);
+                      setPlannedTitle("");
+                      setPlannedCondition("");
+                      setNext(demo.next);
                       setEvidence("");
                       setUrl("");
                       setReflection("");
@@ -547,7 +610,40 @@ export default function App() {
             )}
           </aside>
         </div>
-        {!blocked && <BuddyExchange journey={j} commit={commit} />}
+        <section
+          className="learning-references"
+          aria-label="Sources for the example milestone"
+        >
+          <p className="eyebrow">TRACEABLE LEARNING</p>
+          <h2>References for the contact-form example</h2>
+          <p className="muted">
+            These sources support the example’s form-building and label
+            guidance. They do not assess your work or validate custom goals.
+            Links need internet; the brief notes below are available offline
+            once Steady is cached.
+          </p>
+          <ul>
+            {learningReferences.map((r) => (
+              <li key={r.url}>
+                <span className="badge">{r.publisher}</span>
+                <h3>
+                  <a href={r.url} target="_blank" rel="noopener noreferrer">
+                    {r.title} ↗
+                  </a>
+                </h3>
+                <p>{r.note}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="hint">
+            Links and example guidance checked against these sources on{" "}
+            {referenceCheckedOn}. Summaries are written for this prototype, not
+            copied course materials.
+          </p>
+        </section>
+        {!blocked && (
+          <BuddyExchange key={resetCount} journey={j} commit={commit} />
+        )}
       </main>
       <footer>
         <span>

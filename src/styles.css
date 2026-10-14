@@ -684,3 +684,72 @@ footer .muted {
     gap: 8px;
   }
 }
+.duration-setting {
+  max-width: 320px;
+  margin: 20px auto 0;
+  font-size: 12px;
+  text-align: left;
+}
+.duration-setting select {
+  display: block;
+  width: 100%;
+  font: inherit;
+  color: #263d35;
+  background: white;
+  padding: 10px;
+  border: 1px solid #d9dfd3;
+  border-radius: 7px;
+  margin: 7px 0;
+}
+.duration-setting select:focus-visible {
+  outline: 3px solid #a45c29;
+  outline-offset: 5px;
+}
+.shared-device {
+  padding: 12px;
+  font-size: 12px;
+}
+.shared-device p {
+  font-size: 12px;
+}
+.learning-references {
+  margin-top: 28px;
+  padding: 28px 34px;
+  border-radius: 14px;
+  border: 1px solid #dfe6d6;
+  background: #edf1e4;
+}
+.learning-references ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.learning-references li {
+  background: #f8faf2;
+  border-radius: 8px;
+  padding: 18px;
+}
+.learning-references li p {
+  font-size: 13px;
+}
+.learning-references h3 {
+  font-size: 17px;
+}
+.learning-references .badge {
+  display: inline-block;
+}
+@media (max-width: 800px) {
+  .learning-references ul {
+    grid-template-columns: 1fr;
+  }
+  .learning-references {
+    padding: 24px;
+  }
+}
+@media (max-width: 400px) {
+  .learning-references {
+    padding: 20px 16px;
+  }
+}

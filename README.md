@@ -11,12 +11,13 @@ Ada is illustrative; example feedback is simulated, while real buddy feedback ca
 ## Features that work today
 
 - Save a learning goal, practical milestone, and completion condition; queue more milestones in a visible roadmap with planned, in-progress, and completed states.
-- Start, pause, and resume a 25-minute timer; restore it after refresh. **Finish session for demo** is a visible shortcut, not proof of study time.
+- Choose a 10-, 15-, 25-, or 45-minute session, then start, pause, and resume the timer; restore it after refresh. **Finish session for demo** is a visible shortcut, not proof of study time.
 - Record text evidence or an HTTP(S) work URL, plus a reflection. Finishing the timer alone does not complete the milestone.
 - Open labeled example buddy feedback, then accept or edit the next milestone. Planned milestones become the suggested next step.
 - Exchange real written feedback without accounts: download a check-in, share it manually, and import a buddy’s response. Send replies the same way.
 - Keep a completed focus-session history with recorded achievements and reflections. Sessions finished using the demo shortcut are labeled.
 - Review completed work and retain saved progress on the same browser. Failed writes show an error; reset requires confirmation.
+- Read source-linked MDN and W3C references for the example milestone. External source pages need internet; bundled summaries remain offline.
 - Use the production app offline after its first online load and service-worker activation. The browser suite covers the complete keyboard journey at 360px width.
 
 ## Quick start
