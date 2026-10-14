@@ -753,3 +753,19 @@ footer .muted {
     padding: 20px 16px;
   }
 }
+.update-banner {
+  padding: 14px;
+  margin-top: 20px;
+  background: #edf1e4;
+  border: 1px solid #dfe6d6;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.update-banner button {
+  margin-left: 12px;
+}
+.duration-setting select:disabled {
+  opacity: 1;
+  background: #edf1e4;
+  color: #52675c;
+}

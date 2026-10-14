@@ -7,7 +7,11 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: false,
-      workbox: { globPatterns: ["**/*.{js,css,html,svg}"] },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,svg}"],
+        skipWaiting: true,
+        clientsClaim: true,
+      },
     }),
   ],
   test: { include: ["src/**/*.test.ts"] },

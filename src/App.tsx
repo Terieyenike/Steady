@@ -31,7 +31,31 @@ export default function App() {
     [blocked, setBlocked] = useState(!!initial.error),
     [now, setNow] = useState(Date.now()),
     [reset, setReset] = useState(false),
-    [resetCount, setResetCount] = useState(0);
+    [resetCount, setResetCount] = useState(0),
+    [restart, setRestart] = useState(false),
+    [updateAvailable, setUpdateAvailable] = useState(false);
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    const hadController = !!navigator.serviceWorker.controller;
+    const changed = () => {
+      if (hadController) setUpdateAvailable(true);
+    };
+    navigator.serviceWorker.addEventListener("controllerchange", changed);
+    const check = () => {
+      navigator.serviceWorker
+        .getRegistration()
+        .then((r) => r?.update())
+        .catch(() => {});
+    };
+    window.addEventListener("focus", check);
+    check();
+    const interval = setInterval(check, 60000);
+    return () => {
+      navigator.serviceWorker.removeEventListener("controllerchange", changed);
+      window.removeEventListener("focus", check);
+      clearInterval(interval);
+    };
+  }, []);
   const [goal, setGoal] = useState(demo.goal),
     [title, setTitle] = useState(demo.milestone),
     [condition, setCondition] = useState(demo.condition),
@@ -91,6 +115,18 @@ export default function App() {
           <span /> Saved on this browser
         </span>
       </header>
+      {updateAvailable && (
+        <div className="update-banner" role="status">
+          An app update is ready. Save your work before reloading. Unsaved
+          drafts will be lost.{" "}
+          <button
+            className="secondary"
+            onClick={() => window.location.reload()}
+          >
+            Load updated app
+          </button>
+        </div>
+      )}
       <main>
         <div className="intro">
           <p className="eyebrow">A LITTLE PROGRESS, TOGETHER</p>
@@ -249,11 +285,12 @@ export default function App() {
                           )}
                         </div>
                       )}
-                      {j.session.status === "idle" && (
+                      {
                         <label className="duration-setting">
                           Focus duration
                           <select
                             aria-label="Focus duration"
+                            disabled={j.session.status !== "idle"}
                             value={j.focusMinutes}
                             onChange={(e) => {
                               try {
@@ -272,10 +309,56 @@ export default function App() {
                             ))}
                           </select>
                           <span className="hint">
-                            Choose a length that fits your energy and available
-                            time. Set it before starting.
+                            {j.session.status === "idle"
+                              ? "Choose a length that fits your available time before starting."
+                              : "This session’s duration is locked. Restart an unfinished session below to choose a different length."}
                           </span>
                         </label>
+                      }
+                      {["running", "paused"].includes(j.session.status) && (
+                        <div>
+                          <button
+                            className="text-button"
+                            onClick={() => setRestart(true)}
+                          >
+                            Choose a different duration
+                          </button>
+                          {restart && (
+                            <div
+                              role="group"
+                              aria-label="Confirm session restart"
+                            >
+                              <p className="muted">
+                                Restart this timer? Elapsed time in this
+                                unfinished session will not be counted. Your
+                                milestones and completed sessions stay saved.
+                              </p>
+                              <button
+                                className="secondary"
+                                onClick={() => {
+                                  if (
+                                    commit({
+                                      ...j,
+                                      session: {
+                                        ...fresh().session,
+                                        remaining: j.focusMinutes * 60000,
+                                      },
+                                    })
+                                  )
+                                    setRestart(false);
+                                }}
+                              >
+                                Restart focus session
+                              </button>{" "}
+                              <button
+                                className="text-button"
+                                onClick={() => setRestart(false)}
+                              >
+                                Keep current session
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                     {j.session.status === "finished" && (
@@ -589,6 +672,7 @@ export default function App() {
                       setBlocked(false);
                       setReset(false);
                       setResetCount((count) => count + 1);
+                      setRestart(false);
                       setGoal(demo.goal);
                       setTitle(demo.milestone);
                       setCondition(demo.condition);

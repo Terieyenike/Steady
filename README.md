@@ -11,7 +11,7 @@ Ada is illustrative; example feedback is simulated, while real buddy feedback ca
 ## Features that work today
 
 - Save a learning goal, practical milestone, and completion condition; queue more milestones in a visible roadmap with planned, in-progress, and completed states.
-- Choose a 10-, 15-, 25-, or 45-minute session, then start, pause, and resume the timer; restore it after refresh. **Finish session for demo** is a visible shortcut, not proof of study time.
+- Choose a 10-, 15-, 25-, or 45-minute session, then start, pause, and resume the timer; restore it after refresh. The duration stays visible while locked. A confirmed restart lets you choose another length without deleting milestones or completed sessions. **Finish session for demo** is a visible shortcut, not proof of study time.
 - Record text evidence or an HTTP(S) work URL, plus a reflection. Finishing the timer alone does not complete the milestone.
 - Open labeled example buddy feedback, then accept or edit the next milestone. Planned milestones become the suggested next step.
 - Exchange real written feedback without accounts: download a check-in, share it manually, and import a buddy’s response. Send replies the same way.
@@ -91,6 +91,8 @@ In **Bring a buddy into the loop**, choose **Share my work** and download a comp
 **One bug validation caught:** the timer browser test initially let its mocked clock keep advancing during assertions, producing inconsistent expected times. Freezing the clock with `pauseAt` made the pause/resume/reload check deterministic; the corrected test is in `tests/journey.spec.ts`.
 
 ## Limitations and next steps
+
+If an older cached build is open, save your work and use **Load updated app** when offered. The app checks for updates on focus and periodically while online. Reloading discards unsaved drafts.
 
 - This is a prototype, not a hosted multi-user service. No authentication, cloud backup, cross-device sync, live rooms, live messaging, matching, reminders, or AI feedback is implemented. Buddy exchange requires manually sharing files; the app does not deliver them.
 - Older saved records remain readable. A roadmap and session history start empty for older records because those details were not previously recorded.

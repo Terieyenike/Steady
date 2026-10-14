@@ -228,8 +228,15 @@ export default function BuddyExchange({
             <strong>Goal:</strong> {c.goal}
           </p>
           <p>
-            <strong>Work:</strong> {c.evidence || c.url}
+            <strong>Work:</strong> {c.evidence || "See the work link below."}
           </p>
+          {c.url && (
+            <p>
+              <a href={c.url} target="_blank" rel="noopener noreferrer">
+                Open buddy’s work ↗
+              </a>
+            </p>
+          )}
           <p>
             <strong>Reflection:</strong> {c.reflection}
           </p>

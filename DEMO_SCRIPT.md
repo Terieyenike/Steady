@@ -1,6 +1,6 @@
 # Steady — Moonshot judge demo
 
-For a complete narrated product recording and the Codex build story, use [VOICEOVER_SCRIPT.md](VOICEOVER_SCRIPT.md). This document keeps the short live-demo versions.
+**Submission video limit: five minutes.** Use [VOICEOVER_SCRIPT.md](VOICEOVER_SCRIPT.md) as the complete timed submission script. The shorter pitch and rehearsal notes below are supporting material; do not append them to that recording.
 
 ## 60-second pitch · six beats
 

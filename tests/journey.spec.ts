@@ -366,7 +366,7 @@ test("personal pace, accessible timer and credible reference names", async ({
   await page.getByRole("button", { name: "Start focus session" }).click();
   await expect(
     page.getByRole("combobox", { name: "Focus duration" }),
-  ).toHaveCount(0);
+  ).toBeDisabled();
   await expect(
     page.getByRole("button", { name: "Pause session" }),
   ).toHaveAccessibleName("Pause session");
@@ -381,5 +381,36 @@ test("personal pace, accessible timer and credible reference names", async ({
   await page.getByRole("button", { name: "Cancel", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Pause session" }),
+  ).toBeVisible();
+});
+
+test("restart lets a learner change the timer without losing milestones", async ({
+  page,
+}) => {
+  await commit(page);
+  await page.getByRole("button", { name: "Start focus session" }).click();
+  await page
+    .getByRole("button", { name: "Choose a different duration" })
+    .click();
+  await page.getByRole("button", { name: "Keep current session" }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause session" }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Choose a different duration" })
+    .click();
+  await page
+    .getByRole("button", { name: "Restart focus session", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Focus duration" })
+    .selectOption("10");
+  await page.reload();
+  await expect(page.getByRole("timer")).toHaveText("10:00");
+  await expect(
+    page.getByRole("heading", {
+      name: "Create labeled name, email, and message fields",
+      exact: true,
+    }),
   ).toBeVisible();
 });
