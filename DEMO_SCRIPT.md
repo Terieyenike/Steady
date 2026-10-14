@@ -1,5 +1,7 @@
 # Steady — Moonshot judge demo
 
+For a complete narrated product recording and the Codex build story, use [VOICEOVER_SCRIPT.md](VOICEOVER_SCRIPT.md). This document keeps the short live-demo versions.
+
 ## 60-second pitch · six beats
 
 Read only the **Say** lines. Aim for about 150 words in 60 seconds; allow a longer slot for the complete walkthrough below. Fallbacks replace live actions rather than adding to the speech.
